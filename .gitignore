@@ -1,0 +1,31 @@
+# Xcode
+DerivedData/
+build/
+*.xcuserdata
+xcuserdata/
+*.xcworkspace/xcuserdata/
+*.pbxuser
+*.mode1v3
+*.mode2v3
+*.perspectivev3
+*.xccheckout
+
+# macOS
+.DS_Store
+*.swp
+*~.nib
+
+# Archives
+*.xcarchive
+
+# Dependencies
+Pods/
+Carthage/Build/
+
+# Sensitive
+*.p12
+*.cer
+*.mobileprovision
+.env
+secrets.json
+credentials.json
