@@ -1,5 +1,7 @@
 # KeychainTo1Password
 
+> **Note:** This app is currently a work in progress and does not function yet. Do not rely on it for actual password migration.
+
 Bidirectional migration tool for macOS: move passwords between **1Password** and the native **macOS Keychain (Passwords app)**.
 
 Written by Jordan Koch.
