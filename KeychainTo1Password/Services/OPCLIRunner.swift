@@ -52,7 +52,7 @@ final class OPCLIRunner: @unchecked Sendable {
         }
     }
 
-    func run(_ arguments: [String]) async -> (stdout: String, stderr: String, status: Int32) {
+    func run(_ arguments: [String], stdin: Data? = nil) async -> (stdout: String, stderr: String, status: Int32) {
         await withCheckedContinuation { continuation in
             let process = Process()
             process.executableURL = URL(fileURLWithPath: opPath)
@@ -64,8 +64,21 @@ final class OPCLIRunner: @unchecked Sendable {
             process.standardOutput = stdoutPipe
             process.standardError = stderrPipe
 
+            // Route secrets to the child via stdin (never argv, which is
+            // world-readable through `ps`).
+            let stdinPipe: Pipe? = (stdin != nil) ? Pipe() : nil
+            if let stdinPipe = stdinPipe {
+                process.standardInput = stdinPipe
+            }
+
             do {
                 try process.run()
+
+                if let stdin = stdin, let stdinPipe = stdinPipe {
+                    stdinPipe.fileHandleForWriting.write(stdin)
+                    stdinPipe.fileHandleForWriting.closeFile()
+                }
+
                 process.waitUntilExit()
 
                 let stdoutData = stdoutPipe.fileHandleForReading.readDataToEndOfFile()
